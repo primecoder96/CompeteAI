@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compete AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full height of the viewport */
+        }
+        h1 {
+            font-size: 48px; /* Larger font size for the title */
+            color: #333;
+            margin: 0;
+        }
+        p {
+            font-size: 20px; /* Font size for the description */
+            color: #666;
+            text-align: center; /* Center the text */
+            max-width: 600px; /* Limit the width of the paragraph */
+        }
+        button {
+            font-size: 18px;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-top: 20px; /* Add some space between description and button */
+        }
+        button::after {
+            content: "→";
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome To Compete AI</h1>
+    <p>One Stop gen Ai solution to stay ahead of the market</p>
+    <div style="text-align:center">
+        <button onclick="redirectToPage()">Let's get started</button>
+    </div>
+ <script>
+        function redirectToPage() {
+            window.location.href = "/product"; // Replace with your desired URL
+        }
+    </script>
+</body>
+</html>

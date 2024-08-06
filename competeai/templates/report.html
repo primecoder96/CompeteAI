@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor Analysis Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 20px;
+        }
+         #marketShareChart {
+            max-width: 600px; /* Set the maximum width */
+            max-height: 600px; /* Set the maximum height */
+            margin: auto; /* Center the canvas */
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            font-size: 18px;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-top: 20px; /* Add some space between description and button */
+        }
+        button::before {
+            content: " ← ";
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2> {{industry}} Competitor Analysis Report</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Customer Ratings</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="ratingChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Market Share</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="marketShareChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Competitor Ratings Table</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Organization Name</th>
+                        <th>Customer Rating</th>
+                        <th>Market Share (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="competitorTableBody">
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div style="display: flex;justify-content:center">
+<button onclick="redirectToPage()">&nbsp;Back to Product Description</button>
+    </div>
+<div class="footer">
+    <p>&copy; 2024 Competitor Analysis. All Rights Reserved.</p>
+</div>
+
+<script>
+    // Get the JSON string passed from the Django context
+    const jsonString = '{{ json_string|escapejs }}';
+
+    // Parse the JSON string
+    const competitors = JSON.parse(jsonString);
+    console.log(competitors)
+
+    // Prepare data for charts
+    const labels = competitors.map(comp => comp.org_name);
+    console.log(labels)
+    const ratingsData = competitors.map(comp => comp.cust_rating);
+    const marketShareData = competitors.map(comp => comp.market_share);
+    console.log(marketShareData)
+
+    // Populate the table
+    const tableBody = document.getElementById('competitorTableBody');
+    competitors.forEach(comp => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${comp.org_name}</td>
+            <td>${comp.cust_rating}</td>
+            <td>${comp.market_share}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    // Create charts
+    const ctxRating = document.getElementById('ratingChart').getContext('2d');
+    const ratingChart = new Chart(ctxRating, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Customer Ratings',
+                data: ratingsData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const ctxMarketShare = document.getElementById('marketShareChart').getContext('2d');
+    const numericData = marketShareData.map(data => data != 'N/A' ? parseFloat(data) : data)
+    const marketShareChart = new Chart(ctxMarketShare, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Market Share',
+                data: numericData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+    function redirectToPage() {
+            window.location.href = "/product"; // Replace with your desired URL
+        }
+</script>
+
+</body>
+</html>

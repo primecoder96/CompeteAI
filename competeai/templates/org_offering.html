@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .service-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 15px; /* Reduced padding */
+            width: 180px; /* Reduced width */
+            transition: transform 0.2s;
+            display: inline-block;
+            
+        }
+
+        .service-card:hover {
+            transform: scale(1.05);
+        }
+
+        .service-name {
+            background-color: #add8e6; /* Light blue color */
+            border-radius: 8px;
+            padding: 8px; /* Reduced padding */
+            font-size: 1.0em; /* Reduced font size */
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px; /* Reduced margin */
+        }
+
+        .segment-box {
+           background-color: #ffffff; /* White background for segments */
+            border: 1px solid #007bff; /* Blue border */
+            border-radius: 8px;
+            padding: 8px; /* Padding for the segment box */
+            font-size: 1em; /* Font size for segment text */
+            text-align: center;
+            margin: 3px; /* Space between segments */
+            display: inline-block; /* Allow width to adjust based on content */
+            min-width: 100px; /* Minimum width for segment boxes */
+            max-width: 100%; /* Prevent overflow */
+            white-space: nowrap; /* Prevent text wrapping */
+
+        }
+
+        ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Vertical layout for segments */
+            align-items: center; /* Center segments horizontally */
+        }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px; /* Reduced padding */
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em; /* Reduced font size */
+        }
+
+        .cta-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Product Offerings</h1>
+        <p>Explore our diverse range of services tailored to meet your needs.</p>
+    </header>
+    <main>
+        <div class="service-container"></div>
+    </main>
+
+    <script>
+        const jsonString = '{{ json_string|escapejs }}';
+        // Parse the JSON string
+         const jsonStr = JSON.parse(jsonString);
+
+         const data= jsonStr.result;
+         console.log(data)
+
+        const serviceContainer = document.querySelector('.service-container');
+
+        // Function to create segment boxes
+        function createSegmentBoxes(segments) {
+            const segmentList = document.createElement('ul');
+            segments.forEach(segment => { Object.keys(segment).forEach(segKey => {
+                console.log(segment)
+                const segmentBox = document.createElement('li');
+                segmentBox.innerHTML = `<div class="segment-box">${segKey}</div>`;
+                segmentList.appendChild(segmentBox);})
+            });
+            return segmentList;
+        }
+
+        // Function to create service cards
+        function createServiceCards(services) {
+            Object.keys(services).forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.classList.add('service-card');
+
+                const serviceName = document.createElement('div');
+                serviceName.classList.add('service-name');
+                serviceName.textContent = service;
+                serviceCard.appendChild(serviceName);
+
+                const segments = services[service];
+                const segmentList = createSegmentBoxes(segments);
+                serviceCard.appendChild(segmentList);
+
+                const ctaButton = document.createElement('a');
+                ctaButton.classList.add('cta-button');
+                ctaButton.href = '#';
+                ctaButton.textContent = 'Learn More';
+                serviceCard.appendChild(ctaButton);
+
+                serviceContainer.appendChild(serviceCard);
+            });
+        }
+        Object.keys(data).forEach( key => {createServiceCards(data[key])})
+        // Render core business services
+        //createServiceCards(data[0]);
+        //createServiceCards(data[1]);
+
+    </script>
+</body>
+</html>
